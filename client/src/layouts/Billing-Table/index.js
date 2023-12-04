@@ -42,11 +42,11 @@ import 'layouts/Billing-Table/table.css' // Replace with the actual path to your
 const columns = [
   // { id: "date", label: "Date", minWidth: 100 },
   // { id: "team", label: "Team", minWidth: 150 },
-  // { id: "batch", label: "Batch", minWidth: 150 },
-  { id: "aannotation", label: "Annotation", minWidth: 100 },
-  { id: "aqc", label: "QC", minWidth: 100 },
-  { id: "apmsme", label: "PM + SME", minWidth: 100 },
-  { id: "atotal", label: "Total", minWidth: 100 },
+  // { id: "batch", label: "Members", minWidth: 150 },
+  // { id: "aannotation", label: "Annotation", minWidth: 100 },
+  // { id: "aqc", label: "QC", minWidth: 100 },
+  // { id: "apmsme", label: "PM + SME", minWidth: 100 },
+  // { id: "atotal", label: "Total", minWidth: 100 },
   // { id: "hannotation", label: "Annotation", minWidth: 100 },
   // { id: "hqc", label: "QC", minWidth: 100 },
   // { id: "hpmsme", label: "PM + SME", minWidth: 100 },
@@ -63,7 +63,7 @@ const columns = [
   { id: "jmanagerTeam", label: "Manager", minWidth: 100 },
   { id: "jstatus1", label: "Status", minWidth: 100 },
   { id: "jcDate", label: "EndDate", minWidth: 100 },
-  { id: "action", label: "Action", minWidth: 150 },
+  { id: "action", label: "    Action", minWidth: 50,},
   // { id: 'jtotal', label: 'Total', minWidth: 100, format: (value) => value.toLocaleString('en-US'), },
 ];
 
@@ -73,10 +73,10 @@ function createData(
   team,
   projectname,
   batch,
-  aannotation,
-  aqc,
-  apmsme,
-  atotal,
+  // aannotation,
+  // aqc,
+  // apmsme,
+  // atotal,
   // hannotation,
   // hqc,
   // hpmsme,
@@ -100,10 +100,10 @@ function createData(
     team,
     batch,
     projectname,
-    aannotation,
-    aqc,
-    apmsme,
-    atotal,
+    // aannotation,
+    // aqc,
+    // apmsme,
+    // atotal,
     // hannotation,
     // hqc,
     // hpmsme,
@@ -140,10 +140,10 @@ const rows = [
       item.team,
       item.projectname,
       item.batch,
-      item.associated.annotation,
-      item.associated.qc,
-      item.associated.pm,
-      item.associated.total,
+      // item.associated.annotation,
+      // item.associated.qc,
+      // item.associated.pm,
+      // item.associated.total,
       item.jobs.managerTeam,
       item.jobs.status1,
       item.jobs.cDate,
@@ -178,11 +178,11 @@ export default function ColumnGroupingTable() {
     team: "",
     projectname: "",
     batch: "",
-    associated: {
-      annotation: 0,
-      qc: 0,
-      pmsme: 0,
-    },
+    // associated: {
+    //   annotation: 0,
+    //   qc: 0,
+    //   pmsme: 0,
+    // },
     // hours: {
     //   annotation: 0,
     //   qc: 0,
@@ -258,8 +258,8 @@ export default function ColumnGroupingTable() {
   };
 
   useEffect(() => {
-    var assTotal =
-      bill.associated.annotation + bill.associated.qc + bill.associated.pmsme;
+    // var assTotal =
+    //   bill.associated.annotation + bill.associated.qc + bill.associated.pmsme;
     // var hourTotal =
     //   bill.hours.annotation +
     //   bill.hours.qc +
@@ -272,7 +272,7 @@ export default function ColumnGroupingTable() {
     // var jobTotal = bill.jobs.annotation + bill.jobs.qc;
     setCount({
       ...count,
-      aTotal: assTotal,
+      // aTotal: assTotal,
       // hTotal: hourTotal,
       // jTotal: jobTotal,
     });
@@ -300,12 +300,12 @@ export default function ColumnGroupingTable() {
       batch: bill.batch,
       reportDate: bill.tDate,
       projectname: bill.projectname,
-      associated: {
-        annotation: bill.associated.annotation,
-        qc: bill.associated.qc,
-        pm: bill.associated.pmsme,
-        total: count.aTotal,
-      },
+      // associated: {
+      //   annotation: bill.associated.annotation,
+      //   qc: bill.associated.qc,
+      //   pm: bill.associated.pmsme,
+      //   total: count.aTotal,
+      // },
       // hours:{
       //   annotation:bill.hours.annotation,
       //   qc:bill.hours.qc,
@@ -351,11 +351,11 @@ export default function ColumnGroupingTable() {
     { label: 'Date', key: 'reportDate' },
     { label: 'Team', key: 'team' },
     { label: 'Projectname', key: 'projectname' },
-    { label: 'Batch', key: 'batch' },
-    { label: 'Count of Associates | Annotation', key: 'associated.annotation' },
-    { label: 'Count of Associates | QC', key: 'associated.qc' },
-    { label: 'Count of Associates | PM+SME', key: 'associated.pm' },
-    { label: 'Count of Associates | Total', key: 'associated.total' },
+    { label: 'Members', key: 'batch' },
+    // { label: 'Count of Associates | Annotation', key: 'associated.annotation' },
+    // { label: 'Count of Associates | QC', key: 'associated.qc' },
+    // { label: 'Count of Associates | PM+SME', key: 'associated.pm' },
+    // { label: 'Count of Associates | Total', key: 'associated.total' },
     // {label:'Total Hours Spent | Annotation',key:'hours.annotation'},
     // {label:'Total Hours Spent | QC',key:'hours.qc'},
     // {label:'Total Hours Spent | PM+SME',key:'hours.pm'},
@@ -387,7 +387,7 @@ export default function ColumnGroupingTable() {
     let projectTotal = 0;
 
     data.map((item) => {
-      countTotal += item.associated.total
+      // countTotal += item.associated.total
       // projectTotal += item.projectname
       projectTotal += item.projectname ? 1 : 0;
       // hoursTotal += item.hours.total
@@ -401,7 +401,7 @@ export default function ColumnGroupingTable() {
 
     setTotal({
       ...total,
-      countTotal: countTotal,
+      // countTotal: countTotal,
       // hoursTotal: hoursTotal,
       // jobTotal:jobTotal
       activeCount,
@@ -481,12 +481,12 @@ export default function ColumnGroupingTable() {
         .catch((err) => console.log(`Error:${err}`));
     }
   };
-  // const allReport = (e) => {
+  const allReport = (e) => {
     axios
       .get("/billing/")
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
-  // };
+  };
 
   // Team List
   const List = [
@@ -558,10 +558,19 @@ export default function ColumnGroupingTable() {
                 Create Project
               </MDTypography>
             </MDBox> */}
-          <MDBox sx={{ width: 250, p: 2 }}>
-            <InputLabel htmlFor="project-name">Project Name</InputLabel>
+              <MDBox
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              mt: 1,
+            }}
+          >
+          <MDBox>
+            
+            <InputLabel sx={{ mt: 1, ml: 2 }} htmlFor="project-name">Project Name</InputLabel>
             <TextField
-              sx={{ width: 626, mt: 1 }}
+              sx={{ width: 305, mt: 1 ,  ml: 2  }}
               id="project-name"
               variant="outlined"
               fullWidth
@@ -571,7 +580,7 @@ export default function ColumnGroupingTable() {
               required
             />
           </MDBox>
-          <MDBox sx={{ width: 250, p: 2 }}>
+          <MDBox sx={{ width: 305, }}>
             <InputLabel htmlFor="department">Department</InputLabel>
             <Autocomplete
               disablePortal
@@ -579,13 +588,13 @@ export default function ColumnGroupingTable() {
               options={list}
               onChange={handleTeamChange}
 
-              sx={{ width: 626, mt: 1 }}
+              sx={{ width: 305, mt: 1 }}
               renderInput={(params) => <TextField {...params} />}
             />
-          </MDBox>
-          <Typography variant="h6" mt={3}>Members</Typography>
+          </MDBox></MDBox>
+          {/* <Typography variant="h6" mt={3}>Members</Typography> */}
  
- <MDBox
+ {/* <MDBox
    pb={1}
    pt={1}
    px={1}
@@ -676,7 +685,7 @@ pl={2}
        />
      </Grid>
    </Grid>
- </MDBox>
+ </MDBox> */}
           <MDBox
             sx={{
               display: "flex",
@@ -687,7 +696,7 @@ pl={2}
           >
 
             <InputLabel sx={{ mt: 1, ml: 2 }} htmlFor="manager">Manager</InputLabel>
-            <InputLabel sx={{ mt: 1, mr: 33 }} htmlFor="members">Batch</InputLabel>
+            <InputLabel sx={{ mt: 2, mr: 25 }} htmlFor="members">No.of.Resources</InputLabel>
           </MDBox>
           <MDBox sx={{ p: 1, ml: 1 }}>
 
@@ -737,7 +746,7 @@ pl={2}
             </TextField>
 
             <TextField
-              sx={{ width: 305, ml: 2 }}
+              sx={{ width: 305, ml: 3 }}
               type="number"
               id="members"
               variant="outlined"
@@ -789,10 +798,10 @@ pl={2}
               disabled
             />
           </MDBox>
-          <MDBox sx={{ width: 200, p: 1, mt: 3, ml: 0.5 }}>
+          <MDBox sx={{ width: 200, p: 1, mt: 3, ml: 1 }}>
             <InputLabel htmlFor="status">Status</InputLabel>
             <TextField
-              sx={{ width: 630, mt: 1, mr: 2 }}
+              sx={{ width: 630, mt: 1, mr: 1 }}
               select
               fullWidth
               id="status"
@@ -1195,15 +1204,15 @@ pl={2}
                     Total Project : <b>{total.projectTotal}</b>
                   </TableCell> */}
                   <TableCell align="right" colSpan={2}>
-                  {/* <MDButton
+                  <MDButton
                 variant="outlined"
                 color="error"
                 
-                // onClick={allReport}
+                onClick={allReport}
               // onClick={() => setShow(!show)}
               >
                 &nbsp;Get All Report
-              </MDButton> &nbsp; &nbsp; */}
+              </MDButton> &nbsp; &nbsp;
                   <MDButton type="submit" variant="gradient" color="success"            style={{
             // padding: "6px 12px", // Adjusted padding
             fontSize: "0.7rem", // Adjusted font size
@@ -1246,7 +1255,7 @@ pl={2}
                     //  sx={{width:"2 rem"}}
                     rowSpan={2}
                   >
-                    Batch
+                   No.of.Members
                   </TableCell>
                   <TableCell
                     align="center"
@@ -1284,7 +1293,7 @@ pl={2}
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => {
                     return (
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                      <TableRow hover role="checkbox" tabIndex={-1} key={index}  align="center" >
                         {/* {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -1293,19 +1302,19 @@ pl={2}
                         </TableCell>
                       );
                     })} */}
-                        <TableCell>
+                        <TableCell  align="center">
                           {moment(item.reportDate).format("DD/MM/YYYY")}
                         </TableCell>
-                        <TableCell>{item.team}</TableCell>
-                        <TableCell>{item.batch}</TableCell>
-                        <TableCell>{item.projectname}</TableCell>
-                        <TableCell>{item.associated.annotation}</TableCell>
+                        <TableCell  align="center">{item.team}</TableCell>
+                        <TableCell  align="center">{item.batch}</TableCell>
+                        <TableCell  align="center">{item.projectname}</TableCell>
+                        {/* <TableCell>{item.associated.annotation}</TableCell>
                         <TableCell>{item.associated.qc}</TableCell>
                         <TableCell>{item.associated.pm}</TableCell>
-                        <TableCell>{item.associated.total}</TableCell>
-                        <TableCell>{item.jobs?.managerTeam}</TableCell>
-                        <TableCell>{item.jobs?.status1}</TableCell>
-                        <TableCell>  {moment(item.jobs?.cDate).format("DD/MM/YYYY")}</TableCell>
+                        <TableCell>{item.associated.total}</TableCell> */}
+                        <TableCell  >{item.jobs?.managerTeam}</TableCell>
+                        <TableCell  >{item.jobs?.status1}</TableCell>
+                        <TableCell  >  {moment(item.jobs?.cDate).format("DD/MM/YYYY")}</TableCell>
                         {/* <TableCell>{item.hours.annotation}</TableCell>
                         <TableCell>{item.hours.qc}</TableCell>
                         <TableCell>{item.hours.pm}</TableCell>

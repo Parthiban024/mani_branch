@@ -43,13 +43,13 @@ function AdminReport() {
   const handleChange = (event, value) => setEmpName(value);
   const handleTeamChange = (event, value) => setTeamList(value);
 
-  // const allReport = (e) =>{
+  const allReport = (e) =>{
     axios.get('analyst/')
     .then((res)=>{
       setReport(res.data);
     })
     .catch((err)=>console.log(err));
-  // }
+  }
 // console.log(values.endDate)
 // console.log(empName)
 
@@ -324,16 +324,16 @@ function AdminReport() {
                       &nbsp;Search
                     </MDButton>
                   </MDBox>
-                  {/* <MDBox pt={3} pb={3} display="flex" justifyContent="end" alignItems="center">
+                  <MDBox pt={3} pb={3} display="flex" justifyContent="end" alignItems="center">
               <MDButton
                 variant="gradient"
                 color="error"
-                // onClick={allReport}
+                onClick={allReport}
                 // onClick={() => setShow(!show)}
               >
                 &nbsp;Get All Report
               </MDButton>
-            </MDBox> */}
+            </MDBox>
                 </Grid>
               </Grid>
             </MDBox>
@@ -367,7 +367,7 @@ function AdminReport() {
                   showTotalEntries={false}
                   noEndBorder
                 /> */}
-                <Box sx={{ height: 400, width: "100%" }}>
+                <Box sx={{ height: 700, width: "100%" }}>
                   <DataGrid
                     rows={row}
                     columns={columns}
