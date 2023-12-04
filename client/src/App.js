@@ -31,6 +31,7 @@ import CreateTeam from "./layouts/create-team";
 import Profile from "./layouts/profile";
 import UserReport from "./layouts/UserReport";
 import Employee from "./layouts/employeeReport";
+import Attendance from "layouts/Attendance";
 
 function App() {
   const [controller] = useMaterialUIController();
@@ -108,6 +109,9 @@ function App() {
         </Route>
         <Route element={<Protected isValid={(isLoggedIn&&role==='admin')}/>}>
           <Route exact path="/employee" element={<Employee/>} />
+        </Route>
+        <Route element={<Protected isValid={(isLoggedIn&&role==='analyst')}/>}>
+          <Route exact path="/attendance" element={<Attendance/>} />
         </Route>
         <Route element={<Protected isValid={(isLoggedIn&&role==='analyst')}/>}>
           <Route exact path="/user-report" element={<UserReport/>} />

@@ -11,7 +11,7 @@ import BillingTable from "layouts/Billing-Table";
 // import Employee from "./layouts/employeeReport";
 // import CreateTeam from "layouts/create-team";
 // import Edit from 'layouts/Billing-report/Edit'
-// import Attendance from "layouts/Attendance";
+import Attendance from "layouts/Attendance";
 import Employee from "layouts/employeeReport"
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -24,7 +24,7 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: "/task",
     component: <Dashboard />,
-    role: "analyst",
+    role: "open",
   },
 
   {
@@ -44,6 +44,15 @@ const routes = [
     route: "/team-report",
     component: <AdminReport />,
     role: "admin",
+  },
+  {
+    type: "collapse",
+    name: "Attendance",
+    key: "attendance",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/attendance",
+    component: <Attendance />,
+    role: "analyst",
   },
   {
     type: "collapse",
