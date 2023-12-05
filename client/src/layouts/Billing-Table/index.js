@@ -281,6 +281,7 @@ export default function ColumnGroupingTable() {
     "CV",
     "NLP",
     "CM",
+    "Sourcing",
   ];
   // const managerTeam = [
   //   "naveen",
@@ -493,6 +494,7 @@ export default function ColumnGroupingTable() {
     "CV",
     "NLP",
     "CM",
+    "Sourcing",
   ];
   return (
     <DashboardLayout>
@@ -816,8 +818,10 @@ pl={2}
               }}
             >
               <option value="">Select Status</option>
-              <option value="Active">Active</option>
-              <option value="Completed">Completed</option>
+              <option value="POC">POC</option>
+              <option value="In-Progress">In Progress</option>
+              <option value="Completed-Won">Completed Won</option>
+              <option value="Completed-Lost">Completed Lost</option>
             </TextField>
           </MDBox>
 
