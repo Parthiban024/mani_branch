@@ -28,11 +28,11 @@ function Edit() {
     team: "",
     projectname: "",
     batch: "",
-    associated: {
-      annotation: 0,
-      qc: 0,
-      pmsme: 0,
-    },
+    // associated: {
+    //   annotation: 0,
+    //   qc: 0,
+    //   pmsme: 0,
+    // },
     // hours: {
     //   annotation: 0,
     //   qc: 0,
@@ -97,7 +97,7 @@ function Edit() {
   
   useEffect(() => {
     var assTotal =
-      bill.associated.annotation + bill.associated.qc + bill.associated.pmsme;
+      // bill.associated.annotation + bill.associated.qc + bill.associated.pmsme;
     // var hourTotal =
     //   bill.hours.annotation +
     //   bill.hours.qc +
@@ -110,7 +110,7 @@ function Edit() {
     // var jobTotal = bill.jobs.annotation + bill.jobs.qc;
     setCount({
       ...count,
-      aTotal: assTotal,
+      // aTotal: assTotal,
       // hTotal: hourTotal,
       // jTotal: jobTotal,
     });
@@ -139,11 +139,11 @@ function Edit() {
         team:res.data.team,
         projectname:res.data.projectname,
         batch:res.data.batch,
-        associated:{
-            annotation:res.data.associated.annotation,
-            qc:res.data.associated.qc,
-            pmsme:res.data.associated.pm,
-        },
+        // associated:{
+        //     annotation:res.data.associated.annotation,
+        //     qc:res.data.associated.qc,
+        //     pmsme:res.data.associated.pm,
+        // },
         // hours:{
         //     annotation:res.data.hours.annotation,
         //     qc:res.data.hours.qc,
@@ -164,7 +164,7 @@ function Edit() {
      })
      setCount({
       ...count,
-        aTotal:res.data.associated.total,
+        // aTotal:res.data.associated.total,
         // hTotal:res.data.hours.total,
         // jTotal:res.data.jobs.total,
      })
@@ -185,12 +185,12 @@ function Edit() {
       projectname:bill.projectname,
       batch:bill.batch,
       reportDate:bill.tDate,
-      associated:{
-        annotation:bill.associated.annotation,
-        qc:bill.associated.qc,
-        pm:bill.associated.pmsme,
-        total:count.aTotal,
-      },
+      // associated:{
+      //   annotation:bill.associated.annotation,
+      //   qc:bill.associated.qc,
+      //   pm:bill.associated.pmsme,
+      //   total:count.aTotal,
+      // },
       // hours:{
       //   annotation:bill.hours.annotation,
       //   qc:bill.hours.qc,
@@ -289,7 +289,7 @@ function Edit() {
                     Batch
                   </MDTypography>
                   <MDInput
-                    type="text"
+                    type="number"
                     name="batch"
                     value={bill.batch}
                     onChange={handleInputChange}
@@ -298,7 +298,7 @@ function Edit() {
               </Grid>
             </MDBox>
 
-            <MDBox
+            {/* <MDBox
               mx={2}
               // mt={-3}
               py={3}
@@ -400,7 +400,7 @@ function Edit() {
                   />
                 </Grid>
               </Grid>
-            </MDBox>
+            </MDBox> */}
             {/* <MDBox
               mx={2}
               // mt={-3}
@@ -603,7 +603,7 @@ function Edit() {
                 </Grid>
               </Grid>
             </MDBox> */}
-            <MDBox
+            {/* <MDBox
               mx={2}
               // mt={-3}
               py={3}
@@ -617,7 +617,7 @@ function Edit() {
               <MDTypography variant="h6" color="white">
               Assign To
               </MDTypography>
-            </MDBox>
+            </MDBox> */}
             <MDBox
               pt={6}
               px={4}
@@ -730,9 +730,11 @@ function Edit() {
                 native: true,
               }}
             >
-              <option value="">Select Status</option>
-              <option value="Active">Active</option>
-              <option value="Completed">Completed</option>
+             <option value="">Select Status</option>
+              <option value="POC">POC</option>
+              <option value="In-Progress">In Progress</option>
+              <option value="Completed-Won">Completed Won</option>
+              <option value="Completed-Lost">Completed Lost</option>
             </TextField>
 
                 </Grid>
