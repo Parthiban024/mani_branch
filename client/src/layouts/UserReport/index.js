@@ -436,7 +436,7 @@ function Report() {
           Add Project
         </MDButton>
       </div>
-      <Drawer anchor="right" open={drawerOpen} onClose={closeDrawer}>
+      <Drawer anchor="right" PaperProps={{ style: { width: 712 } }} open={drawerOpen} onClose={closeDrawer}>
         <MDBox
           sx={{
             display: "flex",

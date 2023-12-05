@@ -287,7 +287,7 @@ function Dashboard() {
           Add Project
         </MDButton>
       </div>
-        <Drawer anchor="right" open={drawerOpen} onClose={closeDrawer}>
+        <Drawer anchor="right" PaperProps={{ style: { width: 712 } }} open={drawerOpen} onClose={closeDrawer}>
         <IconButton
             sx={{ position: "absolute", top: 10, right: 0 }} // Positioned to the top right corner
             onClick={closeDrawer}

@@ -10,6 +10,7 @@ import MDInput from "components/MDInput";
 import * as React from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
+import IconButton from '@material-ui/core/IconButton';
 // import FormControl from "@mui/material/FormControl";
 // import Select from "@mui/material/Select";
 import { useState, useEffect, useMemo } from "react";
@@ -18,6 +19,11 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import axios from "axios";
 import moment from "moment";
+import Drawer from "@mui/material/Drawer";
+import FilterListIcon from '@material-ui/icons/FilterList';
+import 'layouts/Billing-Table/table.css'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 // import { height } from "@mui/system";
 
 function AdminReport() {
@@ -35,7 +41,7 @@ function AdminReport() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    setValues({  
+    setValues({
       ...values,
       [name]: value,
     });
@@ -43,15 +49,27 @@ function AdminReport() {
   const handleChange = (event, value) => setEmpName(value);
   const handleTeamChange = (event, value) => setTeamList(value);
 
-  const allReport = (e) =>{
+  const allReport = (e) => {
     axios.get('analyst/')
-    .then((res)=>{
-      setReport(res.data);
-    })
-    .catch((err)=>console.log(err));
+      .then((res) => {
+        setReport(res.data);
+      })
+      .catch((err) => console.log(err));
   }
-// console.log(values.endDate)
-// console.log(empName)
+  // console.log(values.endDate)
+  // console.log(empName)
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Function to handle opening the drawer
+  const openDrawer = () => {
+    setDrawerOpen(true);
+  };
+
+  // Function to handle closing the drawer
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,16 +84,16 @@ function AdminReport() {
     const sDate = values.startDate;
     const eDate = values.endDate;
     const name = empName;
-    const  team  = teamList;
+    const team = teamList;
     // console.log(name !== "");
-    if(name==null&&team==null){
-      axios.get('analyst/fetch/report/date/?sDate='+sDate+'&eDate='+eDate)
-      .then((res)=>{
-        setReport(res.data);
-      })
-      .catch(err=>console.log(err))
+    if (name == null && team == null) {
+      axios.get('analyst/fetch/report/date/?sDate=' + sDate + '&eDate=' + eDate)
+        .then((res) => {
+          setReport(res.data);
+        })
+        .catch(err => console.log(err))
     }
-     else if (name === null) {
+    else if (name === null) {
       axios
         .get(`analyst/fetch/report/team/?sDate=${sDate}&eDate=${eDate}&team=${team}`)
         .then((res) => {
@@ -243,9 +261,13 @@ function AdminReport() {
     <DashboardLayout>
       <DashboardNavbar />
       <Grid item xs={12} mt={3} mb={10}>
+        {/* <IconButton  onClick={openDrawer} color="primary" aria-label="Filter">
+      <FilterListIcon />
+    </IconButton> */}
         <Card>
-          <MDBox component="form" role="form" onSubmit={handleSubmit}>
-            {/* <MDBox
+          <Drawer className="admin-drawer"  PaperProps={{ style: { width: 400 } }} anchor="right" open={drawerOpen} onClose={closeDrawer}>
+            <MDBox component="form" role="form" onSubmit={handleSubmit}>
+              {/* <MDBox
               mx={2}
               // mt={-3}
               py={3}
@@ -260,85 +282,74 @@ function AdminReport() {
                 Reports
               </MDTypography>
             </MDBox> */}
-            <MDBox pt={3} px={3} display="flex" justifycontent="space-evenly" alignItems="center">
-              <Grid container spacing={3}>
-                {/* <Grid item xs={12} md={4}> */}
-                <Grid item xs={3} md={2}>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    Start Date
-                  </MDTypography>
-                  <MDInput
-                    type="date"
-                    name="startDate"
-                    value={values.startDate}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={3} md={2}>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    End Date
-                  </MDTypography>
-                  <MDInput
-                    type="date"
-                    name="endDate"
-                    value={values.endDate}
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={1} md={3}>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    Team
-                  </MDTypography>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={list}
-                    onChange={handleTeamChange}
-                    sx={{ width: 200 }}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </Grid>
-                <Grid item xs={1} md={2}>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    Name
-                  </MDTypography>
-                  <Autocomplete
-                    id="combo-box-demo"
-                    options={name.map((option) => option.name)}
-                    onChange={handleChange}
-                    renderInput={(params) => <TextField {...params} size="medium" />}
-                    // sx={{ width: "180px" }}
-                    sx={{ width: 200 }}
-                  />
-                </Grid>
-                <Grid item xs={1} md={2}>
-                  <MDBox
-                    pt={4}
-                    pb={3}
-                    // px={2}
-                    display="flex"
-                    justifyContent="end"
-                    alignItems="center"
-                  >
-                    <MDButton variant="outlined" color="error" type="submit">
-                      &nbsp;Search
-                    </MDButton>
-                  </MDBox>
-                  <MDBox pt={3} pb={3} display="flex" justifyContent="end" alignItems="center">
-              <MDButton
-                variant="gradient"
-                color="error"
-                onClick={allReport}
-                // onClick={() => setShow(!show)}
-              >
-                &nbsp;Get All Report
-              </MDButton>
-            </MDBox>
-                </Grid>
-              </Grid>
-            </MDBox>
+              <MDBox pt={3} px={3} display="flex" flexDirection="column" justifycontent="space-evenly" alignItems="center">
+                <Grid container spacing={3} flexDirection="column">
+                  {/* <Grid item xs={12} md={4}> */}
+                  <MDBox pt={3}>
+                    <MDTypography variant="h6" fontWeight="medium">
+                      Start Date
+                    </MDTypography>
+                    <MDInput
+                      type="date"
+                      name="startDate"
+                      value={values.startDate}
+                      onChange={handleInputChange}
+                    />
+                    </MDBox>
+                    <MDTypography variant="h6" fontWeight="medium">
+                      End Date
+                    </MDTypography>
+                    <MDInput
+                      type="date"
+                      name="endDate"
+                      value={values.endDate}
+                      onChange={handleInputChange}
+                    />
+                    <MDTypography variant="h6" fontWeight="medium">
+                      Team
+                    </MDTypography>
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={list}
+                      onChange={handleTeamChange}
+                      sx={{ width: 200 }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+      
+                  
+                    <MDTypography variant="h6" fontWeight="medium">
+                      Name
+                    </MDTypography>
+                    <Autocomplete
+                      id="combo-box-demo"
+                      options={name.map((option) => option.name)}
+                      onChange={handleChange}
+                      renderInput={(params) => <TextField {...params} size="medium" />}
+                      // sx={{ width: "180px" }}
+                      sx={{ width: 200 }}
+                    />
+                
+                  <Grid item xs={1} md={2}>
+                    <MDBox
+                      pt={4}
+                      pb={3}
+                      // px={2}
+                      display="flex"
+                      justifyContent="end"
+                      alignItems="center"
+                    >
+                      <MDButton variant="outlined" color="error" type="submit">
+                        &nbsp;Search
+                      </MDButton>
+                    </MDBox>
 
-          </MDBox>
+                  </Grid>
+                </Grid>
+              </MDBox>
+
+            </MDBox>
+          </Drawer>
         </Card>
 
         <MDBox pt={1}>
@@ -375,7 +386,39 @@ function AdminReport() {
                     rowsPerPageOptions={[10]}
                     checkboxSelection
                     disableSelectionOnClick
-                    components={{ Toolbar: GridToolbar }}
+                    components={{
+                      Toolbar: () => (
+                        <div style={{ display: 'flex' }}>
+                          <GridToolbar />
+                          {/* Custom filter icon with aria-label */}
+
+
+                          <div style={{ display: 'flex', marginLeft: 'auto', alignItems: 'center' }} >
+
+                            <FilterListIcon
+                              className="team-filter-icon"
+                              style={{ cursor: 'pointer', color: '#3a87ea', fontSize: '20px' }}
+                              onClick={openDrawer}
+                              aria-label="Team Filter"
+                            />
+                            <MDTypography variant="h6" onClick={openDrawer} style={{ color: '#3a87ea', cursor: 'pointer', fontSize: '12.1px', marginRight: '10px', }}>
+                              TEAM FILTER
+                            </MDTypography>
+                            <MDButton
+                              className="team-report-btn"
+                              variant="outlined"
+                              color="error"
+                              size="small"
+                              style={{ marginRight: '13px' }}
+                              onClick={allReport}
+                            // onClick={() => setShow(!show)}
+                            >
+                              &nbsp;All Report
+                            </MDButton>
+                          </div>
+                        </div>
+                      ),
+                    }}
                   />
                 </Box>
               </MDBox>
