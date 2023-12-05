@@ -35,8 +35,14 @@ import { CSVLink } from 'react-csv';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { ToastContainer, toast } from 'react-toastify'
 import { useSelector } from "react-redux";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import DialogActions from '@mui/material/DialogActions';
 import 'layouts/Billing-Table/table.css' // Replace with the actual path to your MyTable component.
 
 const columns = [
@@ -213,6 +219,26 @@ export default function ColumnGroupingTable() {
   // Function to handle closing the drawer
   const closeDrawer = () => {
     setDrawerOpen(false);
+  };
+  
+  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
+
+  // Function to handle opening the filter popup
+  const openFilterDialog = () => {
+    setFilterDialogOpen(true);
+  };
+
+  // Function to handle closing the filter popup
+  const closeFilterDialog = () => {
+    setFilterDialogOpen(false);
+  };
+  const handleCancel = () => {
+    // Reset all fields to their initial values
+    setValues(initialValues);
+    setTeamList(null);
+  
+    // Close the filter popup
+    closeFilterDialog();
   };
 
   const empId = useSelector((state) => state.auth.user.empId);
@@ -1059,115 +1085,94 @@ pl={2}
       </Drawer>
       <Grid item xs={12} mt={4} mb={1}>
         <Card>
-          <MDBox component="form" role="form" onSubmit={handleSubmit}>
-            {/* <MDBox
-              mx={2}
-              // mt={-3}
-              py={3}
-              pt={3}
-              px={2}
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="info"
-            >
-              <MDTypography variant="h6" color="white">
-                Project Reports
-              </MDTypography>
-            </MDBox> */}
-            <MDBox
-              pt={2}
-              px={4}
-              display="flex"
-              justifycontent="space-evenly"
-              alignItems="center"
-            >
-              <Grid container spacing={3}>
-                {/* <Grid item xs={12} md={4}> */}
-                <Grid item xs={3} md={2.3}>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    Start Date
-                  </MDTypography>
-                  <MDInput
-                    type="date"
-                    name="startDate"
-                    value={values.startDate}
-                    onChange={handleInputchange}
-                  />
-                </Grid>
-                <Grid item xs={3} md={2.3}>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    End Date
-                  </MDTypography>
-                  <MDInput
-                    type="date"
-                    name="endDate"
-                    value={values.endDate}
-                    onChange={handleInputchange}
-                  />
-                </Grid>
-                <Grid item xs={1} md={2.3}>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    Team
-                  </MDTypography>
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={list}
-                    onChange={handleTeamchange}
-                    sx={{ width: 200 }}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </Grid>
-                {/* <Grid item xs={1} md={2}>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    Batch
-                  </MDTypography>
-                  <Autocomplete
-                    id="combo-box-demo"
-                    options={name.map((option) => option.name)}
-                    onChange={handleChange}
-                    renderInput={(params) => <TextField {...params} size="medium" />}
-                    // sx={{ width: "180px" }}
-                    sx={{ width: 200 }}
-                  />
-                </Grid> */}
-                <Grid item xs={1} md={2}>
-                  <MDBox
-                    pt={4}
-                    pb={3}
-                    px={2}
-                    display="flex"
-                    justifyContent="end"
-                    alignItems="center"
-                  >
-                    <MDButton variant="outlined" color="error" type="submit">
-                      &nbsp;Search
-                    </MDButton>
-                  </MDBox>
-                </Grid>
-              </Grid>
-            </MDBox>
-            <MDBox
-              // pt={3}
-              ml={2}
-              pb={0}
-              px={2}
-              display="flex"
-              justifyContent="start"
-              alignItems="center"
-            >
-              {/* <MDButton
-                variant="gradient"
-                color="error"
-                onClick={allReport}
-              // onClick={() => setShow(!show)}
-              >
-                &nbsp;Get All Report
-              </MDButton> */}
-      
-            </MDBox>
-          </MDBox>
+        <Dialog
+  open={filterDialogOpen}
+  onClose={closeFilterDialog}
+  fullWidth
+  maxWidth="md"
+>
+  <DialogTitle sx={{ textAlign: 'left' }}>Your Dialog Title</DialogTitle>
+  <DialogContent>
+    <MDBox
+      component="form"
+      role="form"
+      onSubmit={handleSubmit}
+      className="filter-popup"
+    >
+      <Grid container spacing={3}>
+        {/* Row 1: Start Date and End Date */}
+        <Grid item xs={6}>
+          <MDTypography variant="h6" fontWeight="medium">
+            Start Date
+          </MDTypography>
+          <MDInput
+            type="date"
+            name="startDate"
+            sx={{ width: '100%' }}
+            value={values.startDate}
+            onChange={handleInputchange}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <MDTypography variant="h6" fontWeight="medium">
+            End Date
+          </MDTypography>
+          <MDInput
+            type="date"
+            name="endDate"
+            sx={{ width: '100%' }}
+            value={values.endDate}
+            onChange={handleInputchange}
+          />
+        </Grid>
+
+        {/* Row 2: Team and Name */}
+        <Grid item xs={6}>
+          <MDTypography variant="h6" fontWeight="medium">
+            Team
+          </MDTypography>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={list}
+            onChange={handleTeamchange}
+            sx={{ width: '100%' }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </Grid>
+
+        {/* Row 3: Search Button */}
+        <Grid item xs={12}>
+  <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    pt={3}
+  >
+    <MDButton variant="gradient" size="small" color="success" type="submit">
+      Search
+    </MDButton>
+    <MDButton
+      variant="gradient"
+      size="small"
+      color="warning"
+      onClick={handleCancel}
+      style={{ marginLeft: '10px' }}
+    >
+      Cancel
+    </MDButton>
+  </Box>
+</Grid>
+      </Grid>
+    </MDBox>
+  </DialogContent>
+  {/* <DialogActions>
+    Add a close button or any other UI element to close the filter popup
+    <IconButton onClick={closeFilterDialog}>
+      <CloseIcon />
+    </IconButton>
+  </DialogActions> */}
+</Dialog>
         </Card>
       </Grid>
       <Grid item xs={12} mt={1} mb={10}>
@@ -1208,6 +1213,18 @@ pl={2}
                     Total Project : <b>{total.projectTotal}</b>
                   </TableCell> */}
                   <TableCell align="right" colSpan={2}>
+                    
+                  <FilterListIcon
+                              className="team-filter-icon"
+                              // style={{ cursor: 'pointer', color: '#3a87ea', fontSize: '20px' }}
+                              // onClick={openDrawer}
+                              style={{ cursor: 'pointer', color: '#3a87ea', fontSize: '20px' }}
+                              onClick={openFilterDialog}
+                              aria-label="Team Filter"
+                            />
+                            <MDTypography variant="h6" onClick={openDrawer} style={{ color: '#3a87ea', cursor: 'pointer', fontSize: '12.1px', marginRight: '10px', }}>
+                              TEAM FILTER
+                            </MDTypography>
                   <MDButton
                 variant="outlined"
                 color="error"

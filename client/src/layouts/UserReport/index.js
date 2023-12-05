@@ -29,6 +29,12 @@ import { useSelect } from "@mui/base";
 import { ToastContainer, toast } from "react-toastify";
 import InputLabel from "@mui/material/InputLabel";
 import Pagination from '@mui/material/Pagination';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import 'layouts/Billing-Table/table.css'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
 import 'layouts/Billing-Table/table.css'
 function Report() {
 
@@ -87,6 +93,26 @@ function Report() {
       managerTask: '',
       sessionOne: ''
     }));
+  };
+
+  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
+
+  // Function to handle opening the filter popup
+  const openFilterDialog = () => {
+    setFilterDialogOpen(true);
+  };
+
+  // Function to handle closing the filter popup
+  const closeFilterDialog = () => {
+    setFilterDialogOpen(false);
+  };
+  const handleCancel = () => {
+    // Reset all fields to their initial values
+    setValues(initialValues);
+    setTeamList(null);
+  
+    // Close the filter popup
+    closeFilterDialog();
   };
 
   // Define getCurrentDate function
@@ -300,6 +326,7 @@ function Report() {
       startDate: values.startDate,
       endDate: values.endDate,
       team: teamList,
+      
     };
     // console.log(userData);
 
@@ -311,6 +338,11 @@ function Report() {
         setReport(res.data);
       })
       .catch((err) => console.log(`Error:${err}`));
+
+      setValues(initialValues);
+      setTeamList(null);
+    
+      closeFilterDialog();
   };
 
   // tabel report
@@ -608,79 +640,98 @@ function Report() {
       </Drawer>
       <Grid item xs={12} mt={1} mb={5}>
         {/* <Card> */}
-        <MDBox pb={1} component="form" role="form" onSubmit={handleSubmit}>
-          {/* <MDBox
-              mx={2}
-              // mt={-3}
-              py={3}
-              pt={3}
-              px={2}
-              variant="gradient"
-              bgColor="info"
-              borderRadius="lg"
-              coloredShadow="info"
-            >
-              <MDTypography variant="h6" color="white">
-                Reports
-              </MDTypography>
-            </MDBox> */}
-          <MDBox pt={1} px={4} display="flex" justifyContent="space-evenly" alignItems="center">
-            <Grid container spacing={3}>
-              <Grid item xs={2} md={3}>
-                <MDTypography variant="h6" fontWeight="medium">
-                  Start Date
-                </MDTypography>
-                <MDInput
-                  type="date"
-                  name="startDate"
-                  value={values.startDate}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={2} md={3}>
-                <MDTypography variant="h6" fontWeight="medium">
-                  End Date
-                </MDTypography>
-                <MDInput
-                  type="date"
-                  name="endDate"
-                  value={values.endDate}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-              <Grid item xs={2} md={3}>
-                <MDTypography variant="h6" fontWeight="medium">
-                  Team
-                </MDTypography>
-                <Autocomplete
-                  disablePortal
-                  id="combo-box-demo"
-                  options={list}
-                  onChange={handleTeamChange}
-                  sx={{ width: 200 }}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </Grid>
-              <Grid item xs={2} md={3}>
-                <MDBox pt={4} display="flex" justifyContent="start" alignItems="center">
-                  <MDButton
-                    variant="outlined"
-                    color="primary"
-                    type="submit"
-                    onClick={() => setShow(!show)}
-                  >
-                    &nbsp;Search
-                  </MDButton>
-                </MDBox>
+        <Dialog
+  open={filterDialogOpen}
+  onClose={closeFilterDialog}
+  fullWidth
+  maxWidth="md"
+>
+  <DialogTitle sx={{ textAlign: 'left' }}>Your Dialog Title</DialogTitle>
+  <DialogContent>
+    <MDBox
+      component="form"
+      role="form"
+      onSubmit={handleSubmit}
+      className="filter-popup"
+    >
+      <Grid container spacing={3}>
+        {/* Row 1: Start Date and End Date */}
+        <Grid item xs={6}>
+          <MDTypography variant="h6" fontWeight="medium">
+            Start Date
+          </MDTypography>
+          <MDInput
+            type="date"
+            name="startDate"
+            sx={{ width: '100%' }}
+            value={values.startDate}
+            onChange={handleInputChange}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <MDTypography variant="h6" fontWeight="medium">
+            End Date
+          </MDTypography>
+          <MDInput
+            type="date"
+            name="endDate"
+            sx={{ width: '100%' }}
+            value={values.endDate}
+            onChange={handleInputChange}
+          />
+        </Grid>
 
-              </Grid>
-            </Grid>
-          </MDBox>
+        {/* Row 2: Team and Name */}
+        <Grid item xs={6}>
+          <MDTypography variant="h6" fontWeight="medium">
+            Team
+          </MDTypography>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={list}
+            onChange={handleTeamChange}
+            sx={{ width: '100%' }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </Grid>
 
-        </MDBox>
+
+        {/* Row 3: Search Button */}
+        <Grid item xs={12}>
+  <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    pt={3}
+  >
+    <MDButton variant="gradient" size="small" color="success" type="submit">
+      Search
+    </MDButton>
+    <MDButton
+      variant="gradient"
+      size="small"
+      color="warning"
+      onClick={handleCancel}
+      style={{ marginLeft: '10px' }}
+    >
+      Cancel
+    </MDButton>
+  </Box>
+</Grid>
+      </Grid>
+    </MDBox>
+  </DialogContent>
+  {/* <DialogActions>
+    Add a close button or any other UI element to close the filter popup
+    <IconButton onClick={closeFilterDialog}>
+      <CloseIcon />
+    </IconButton>
+  </DialogActions> */}
+</Dialog>
         {/* </Card> */}
         {/* {show ? ( */}
-        <MDBox pt={8}>
+        <MDBox pt={4}>
           <Grid item xs={12}>
             <Card>
               {/* <MDBox
@@ -706,6 +757,33 @@ function Report() {
                     rowsPerPageOptions={[10]}
                     checkboxSelection
                     disableSelectionOnClick
+                    components={{
+                      Toolbar: () => (
+                        <div style={{ display: 'flex' }}>
+                          <GridToolbar />
+                          {/* Custom filter icon with aria-label */}
+
+
+                          <div style={{ display: 'flex', marginLeft: 'auto', alignItems: 'center' }} >
+
+                            <FilterListIcon
+                              className="team-filter-icon"
+                              // style={{ cursor: 'pointer', color: '#3a87ea', fontSize: '20px' }}
+                              // onClick={openDrawer}
+                              style={{ cursor: 'pointer', color: '#3a87ea', fontSize: '20px' }}
+                              onClick={openFilterDialog}
+                              aria-label="Team Filter"
+                            />
+                            <MDTypography variant="h6" onClick={openDrawer} style={{ color: '#3a87ea', cursor: 'pointer', fontSize: '12.1px', marginRight: '10px', }}>
+                              TEAM FILTER
+                            </MDTypography>
+
+                          </div>
+                        </div>
+                      ),
+                    }}
+                
+                    
                   />
                 </Box>
               </MDBox>

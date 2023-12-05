@@ -219,3 +219,8 @@ margin-bottom: 10px !important;
 .admin-drawer{
     width: 2000px !important;
 }
+.filter-popup {
+    padding: 16px;
+    /* Add other styling properties as needed */
+  }
+  
