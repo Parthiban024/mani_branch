@@ -304,7 +304,7 @@ function AdminReport() {
   fullWidth
   maxWidth="md"
 >
-  <DialogTitle sx={{ textAlign: 'left' }}>Your Dialog Title</DialogTitle>
+  <DialogTitle sx={{ textAlign: 'left' }}>Individual Team Filter</DialogTitle>
   <DialogContent>
     <MDBox
       component="form"
@@ -355,7 +355,7 @@ function AdminReport() {
         </Grid>
         <Grid item xs={6}>
           <MDTypography variant="h6" fontWeight="medium">
-            Name
+           User Name
           </MDTypography>
           <Autocomplete
             id="combo-box-demo"
@@ -454,7 +454,7 @@ function AdminReport() {
                               onClick={openFilterDialog}
                               aria-label="Team Filter"
                             />
-                            <MDTypography variant="h6" onClick={openDrawer} style={{ color: '#3a87ea', cursor: 'pointer', fontSize: '12.1px', marginRight: '10px', }}>
+                            <MDTypography variant="h6"  onClick={openFilterDialog} style={{ color: '#3a87ea', cursor: 'pointer', fontSize: '12.1px', marginRight: '10px', }}>
                               TEAM FILTER
                             </MDTypography>
                             <MDButton
