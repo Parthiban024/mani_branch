@@ -288,11 +288,12 @@ function Report() {
   ];
 
   const tasklist = [
-    "Idle",
-    "Training",
-    "Production",
-    "QualityCheck",
-    "SpotQC",
+    "Initial Annotation-Billable",
+    "QC Annotation-Billable",
+    "Project Training-Billable",
+    "Spot QC-Non Billable",
+    "Other-Interval Tracking -Billable",
+  
     "Guidelines",
     "POC"
   ];
