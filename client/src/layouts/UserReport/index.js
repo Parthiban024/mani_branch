@@ -68,13 +68,13 @@ function Report() {
   const handleTaskChange = (event, value) => setTaskList(value);
   const handleInputchange = (e) => {
     const { name, value: inputValue } = e.target;
-  
+
     setValue((prevValue) => ({
       ...prevValue,
       [name]: inputValue,
     }));
   };
-  
+
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Function to handle opening the drawer
@@ -110,7 +110,7 @@ function Report() {
     // Reset all fields to their initial values
     setValues(initialValues);
     setTeamList(null);
-  
+
     // Close the filter popup
     closeFilterDialog();
   };
@@ -219,7 +219,7 @@ function Report() {
       name,
       empId,
       team: value.team, // Use value.team instead of teamlist
-      task: taskList, 
+      task: taskList,
       projectName: value.projectName,
       // task: values.task,
       managerTask: value.managerTask,
@@ -293,7 +293,7 @@ function Report() {
     "Project Training-Billable",
     "Spot QC-Non Billable",
     "Other-Interval Tracking -Billable",
-  
+
     "Guidelines",
     "POC"
   ];
@@ -327,7 +327,7 @@ function Report() {
       startDate: values.startDate,
       endDate: values.endDate,
       team: teamList,
-      
+
     };
     // console.log(userData);
 
@@ -340,10 +340,10 @@ function Report() {
       })
       .catch((err) => console.log(`Error:${err}`));
 
-      setValues(initialValues);
-      setTeamList(null);
-    
-      closeFilterDialog();
+    setValues(initialValues);
+    setTeamList(null);
+
+    closeFilterDialog();
   };
 
   // tabel report
@@ -512,7 +512,7 @@ function Report() {
           <MDBox sx={{ width: 250, p: 2 }}>
             <InputLabel htmlFor="department">Department</InputLabel>
             <Autocomplete
-            sx={{ width: 626, mt: 1 }}
+              sx={{ width: 626, mt: 1 }}
               disablePortal
               id="combo-box-demo"
               options={list}
@@ -529,7 +529,7 @@ function Report() {
                   team: newValue,
                 });
               }}
-           
+
               renderInput={(params) => <TextField {...params} />}
             />
           </MDBox>
@@ -642,94 +642,94 @@ function Report() {
       <Grid item xs={12} mt={1} mb={5}>
         {/* <Card> */}
         <Dialog
-  open={filterDialogOpen}
-  onClose={closeFilterDialog}
-  fullWidth
-  maxWidth="md"
->
-  <DialogTitle sx={{ textAlign: 'left' }}>Your Dialog Title</DialogTitle>
-  <DialogContent>
-    <MDBox
-      component="form"
-      role="form"
-      onSubmit={handleSubmit}
-      className="filter-popup"
-    >
-      <Grid container spacing={3}>
-        {/* Row 1: Start Date and End Date */}
-        <Grid item xs={6}>
-          <MDTypography variant="h6" fontWeight="medium">
-            Start Date
-          </MDTypography>
-          <MDInput
-            type="date"
-            name="startDate"
-            sx={{ width: '100%' }}
-            value={values.startDate}
-            onChange={handleInputChange}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <MDTypography variant="h6" fontWeight="medium">
-            End Date
-          </MDTypography>
-          <MDInput
-            type="date"
-            name="endDate"
-            sx={{ width: '100%' }}
-            value={values.endDate}
-            onChange={handleInputChange}
-          />
-        </Grid>
+          open={filterDialogOpen}
+          onClose={closeFilterDialog}
+          fullWidth
+          maxWidth="md"
+        >
+          <DialogTitle sx={{ textAlign: 'left' }}>Your Dialog Title</DialogTitle>
+          <DialogContent>
+            <MDBox
+              component="form"
+              role="form"
+              onSubmit={handleSubmit}
+              className="filter-popup"
+            >
+              <Grid container spacing={3}>
+                {/* Row 1: Start Date and End Date */}
+                <Grid item xs={6}>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    Start Date
+                  </MDTypography>
+                  <MDInput
+                    type="date"
+                    name="startDate"
+                    sx={{ width: '100%' }}
+                    value={values.startDate}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    End Date
+                  </MDTypography>
+                  <MDInput
+                    type="date"
+                    name="endDate"
+                    sx={{ width: '100%' }}
+                    value={values.endDate}
+                    onChange={handleInputChange}
+                  />
+                </Grid>
 
-        {/* Row 2: Team and Name */}
-        <Grid item xs={6}>
-          <MDTypography variant="h6" fontWeight="medium">
-            Team
-          </MDTypography>
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={list}
-            onChange={handleTeamChange}
-            sx={{ width: '100%' }}
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </Grid>
+                {/* Row 2: Team and Name */}
+                <Grid item xs={6}>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    Team
+                  </MDTypography>
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={list}
+                    onChange={handleTeamChange}
+                    sx={{ width: '100%' }}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </Grid>
 
 
-        {/* Row 3: Search Button */}
-        <Grid item xs={12}>
-  <Box
-    display="flex"
-    justifyContent="center"
-    alignItems="center"
-    pt={3}
-  >
-    <MDButton variant="gradient" size="small" color="success" type="submit">
-      Search
-    </MDButton>
-    <MDButton
-      variant="gradient"
-      size="small"
-      color="warning"
-      onClick={handleCancel}
-      style={{ marginLeft: '10px' }}
-    >
-      Cancel
-    </MDButton>
-  </Box>
-</Grid>
-      </Grid>
-    </MDBox>
-  </DialogContent>
-  {/* <DialogActions>
+                {/* Row 3: Search Button */}
+                <Grid item xs={12}>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    pt={3}
+                  >
+                    <MDButton variant="gradient" size="small" color="success" type="submit">
+                      Search
+                    </MDButton>
+                    <MDButton
+                      variant="gradient"
+                      size="small"
+                      color="warning"
+                      onClick={handleCancel}
+                      style={{ marginLeft: '10px' }}
+                    >
+                      Cancel
+                    </MDButton>
+                  </Box>
+                </Grid>
+              </Grid>
+            </MDBox>
+          </DialogContent>
+          {/* <DialogActions>
     Add a close button or any other UI element to close the filter popup
     <IconButton onClick={closeFilterDialog}>
       <CloseIcon />
     </IconButton>
   </DialogActions> */}
-</Dialog>
+        </Dialog>
         {/* </Card> */}
         {/* {show ? ( */}
         <MDBox pt={4}>
@@ -783,8 +783,8 @@ function Report() {
                         </div>
                       ),
                     }}
-                
-                    
+
+
                   />
                 </Box>
               </MDBox>

@@ -14,7 +14,19 @@ router.route('/').get((req, res) => {
 router.route('/att').post(async (req, res) => {
   try {
     const { name, empId, checkInTime, checkOutTime, total } = req.body;
-    const newAttendance = new Attendance({ name, empId, checkInTime, checkOutTime, total });
+    
+    // Capture the current date
+    const currentDate = new Date();
+
+    const newAttendance = new Attendance({
+      name,
+      empId,
+      checkInTime,
+      checkOutTime,
+      total,
+      currentDate,
+    });
+
     await newAttendance.save();
     res.json('Data Saved!!!');
   } catch (error) {
@@ -23,12 +35,17 @@ router.route('/att').post(async (req, res) => {
 });
 
 // Fetch individual user's attendance data
+// attendance.routes.js
+
 router.route('/fetch/att-data/').get((req, res) => {
   const empId = req.query.empId;
   Attendance.find({ empId: empId })
+    .sort({ currentDate: -1 }) // Sort by currentDate in descending order
+    .select('checkInTime checkOutTime total currentDate') // Select only specific fields
     .then((attendance) => res.json(attendance))
     .catch((err) => res.status(400).json('err' + err));
 });
+
 
 // ... (Other routes)
 

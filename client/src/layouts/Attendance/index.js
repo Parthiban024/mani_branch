@@ -8,167 +8,119 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSelector } from "react-redux";
-// Attandance
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { updateUserName, updateUserEmpId } from './userActions';
 import { useDispatch } from 'react-redux';
+import { DataGrid } from '@mui/x-data-grid';
+import DatePicker from 'react-datepicker';
+
 
 function Attendance() {
   const dispatch = useDispatch();
-  const [ctime, setTime] = useState(localStorage.getItem("checkinTime") || "");
-  const [checkT, setCheckT] = useState(localStorage.getItem("checkoutTime") || "");
+  const [checkinTime, setCheckinTime] = useState(localStorage.getItem("checkinTime") || "");
+  const [checkoutTime, setCheckoutTime] = useState(localStorage.getItem("checkoutTime") || "");
+  const [checkinTimeForCheckout, setCheckinTimeForCheckout] = useState('');
   const [total, setTotal] = useState(localStorage.getItem('total') || '');
-  const [remain, setRemain] = useState();
+  const [remainingTime, setRemainingTime] = useState();
   const name = useSelector((state) => state.auth.user.name);
   const empId = useSelector((state) => state.auth.user.empId);
-  // const [outTime,setOutTime] = useState();
-  const [isDisabled, setDisabled] = useState(false);
-  const [isDisabledct, setDisabledct] = useState(false);
-  function calc(checkoutTime) {
-    // setInterval(()=>{})
-    const time = new Date();
-    // const checkoutTime = moment(ctime).add(570,'minutes').format('hh:mm a');
-    const f = checkoutTime;
-    console.log(checkoutTime);
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
 
-    const a = moment(f, "hh:mm a");
-    const b = moment(time, "hh:mm a");
-    const c = moment.duration(a.diff(b));
-    const d = `${c.hours()}hrs : ${c.minutes()}mins`;
-    console.log(`${c.hours()}hrs : ${c.minutes()}mins`);
-    setRemain(d);
-  }
-
-    // Function to reset state and enable buttons
-    const resetStateAndButtons = () => {
-      setTime('');
-      setCheckT('');
-      setTotal('');
-      setRemain('');
-      setDisabled(false);
-      setDisabledct(false);
-      localStorage.removeItem('checkinTime');
-      localStorage.removeItem('checkoutTime');
-      localStorage.removeItem('total');
-    };
-      // Set interval to reset state and enable buttons every 1 minute
   useEffect(() => {
-    const intervalId = setInterval(resetStateAndButtons, 60000);
-    return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, []);
-  useEffect(() => {
-    const totalResetIntervalId = setInterval(() => {
-      localStorage.removeItem('total');
-      setTotal('');
-    }, 60000);
+    fetch(`/attendance/fetch/att-data?empId=${empId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const mappedData = data.map((item) => ({ ...item, id: item._id }));
+        setAttendanceData(mappedData);
+      })
+      .catch((error) => console.error('Error fetching data:', error));
+  }, [empId]);
 
-    return () => clearInterval(totalResetIntervalId); // Cleanup on component unmount
-  }, []);
-    
-  useEffect(() => {
-    const storedCheckinTime = localStorage.getItem("checkinTime");
-    const storedCheckoutTime = localStorage.getItem("checkoutTime");
-    const storedTotal = localStorage.getItem('total');
-    const storedName = localStorage.getItem("name");
-    const storedEmpId = localStorage.getItem("empId");
+  const columns = [
+    { field: 'id', headerName: 'ID',  editable: false,
+   },
+    // { field: 'name', headerName: 'Name', width: 120 }, // Add this line
+    // { field: 'empId', headerName: 'Employee ID', width: 120 }, // Add this line
+    { field: 'checkInTime', headerName: 'Check In', width: 150,  flex: 1,  },
+    { field: 'checkOutTime', headerName: 'Check Out', width: 150,  flex: 1,  },
+    { field: 'total', headerName: 'Total', width: 150,  flex: 1,  },
+    { field: 'currentDate', headerName: 'Date', width: 150, flex: 1,  },
+  ];
 
-    if (storedName) {
-      // If name is stored, update the Redux state
-      // This assumes that you have a way to dispatch an action to update the user in the Redux store
-      dispatch(updateUserName(storedName)); // Replace with the actual action you use
+  const mappedData = attendanceData.map((item, index) => ({
+    ...item,
+    id: index + 1,
+    name: item.name,
+    empId: item.empId,
+  }));
+  // const filteredData = selectedDate
+  //   ? mappedData.filter((entry) => entry.currentDate.includes(selectedDate))
+  //   : mappedData;
 
-      if (storedEmpId) {
-        // If empId is stored, update the Redux state
-        dispatch(updateUserEmpId(storedEmpId)); // Replace with the actual action you use
-      }
-      
-    if (storedTotal) {
-      setTotal(storedTotal);
-    }
-    }
-    
+  const handleCheckin = async () => {
+    const timeNow = moment().format('hh:mm a');
+    setCheckinTime(timeNow);
+    setCheckinTimeForCheckout(timeNow); // Store check-in time for later use in checkout
 
-    if (storedCheckinTime) {
-      setTime(storedCheckinTime);
-      setDisabled(true);
-    }
+    // Save data to local storage
+    localStorage.setItem("checkinTime", timeNow);
+    localStorage.setItem("name", name);
+    localStorage.setItem("empId", empId);
 
-    if (storedCheckoutTime) {
-      setCheckT(storedCheckoutTime);
-      setDisabledct(true);
-    }
-  }, []);
-
-  //    useEffect(()=>{
-  //         calc()
-  //    },[])
-  //    setInterval(()=>{calc()},60000)
-  const onCheck = async (e) => {
-    e.preventDefault();
-    const time = new Date();
-    const checkoutTime = moment(time).add(570, 'minutes').format('hh:mm a');
-    const timeNow = moment(time).format('hh:mm a');
-  
-    // Update the state
-    setTime(timeNow);
-    setDisabled(true);
-
-      // Save data to local storage
-      localStorage.setItem("checkinTime", timeNow);
-      localStorage.setItem("name", name);
-      localStorage.setItem("empId", empId);
-  
     // Send data to the backend
-    try {
-      const response = await fetch('/attendance/att', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ checkInTime: timeNow, name: name, empId: empId }),
-      });
-  
-      if (response.ok) {
-        console.log('Attendance saved successfully');
-      } else {
-        console.error('Failed to save attendance');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
+    // try {
+    //   const response = await fetch('/attendance/att', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ checkInTime: timeNow, name: name, empId: empId }),
+    //   });
+
+    //   if (response.ok) {
+    //     console.log('Attendance saved successfully');
+    //   } else {
+    //     console.error('Failed to save attendance');
+    //   }
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // }
   };
-  
-  // Inside the onCheckout function
-  const onCheckout = async (e) => {
-    e.preventDefault();
-    const cOut = new Date();
-    const checkTime = moment(cOut).format('hh:mm a');
-    setCheckT(checkTime);
-    const a = moment(ctime, 'hh:mm a');
-    const b = moment(checkTime, 'hh:mm a');
-    const overAll = moment.duration(b.diff(a));
-  
+
+  const handleCheckout = async () => {
+    const checkTime = moment().format('hh:mm a');
+    setCheckoutTime(checkTime);
+
+    const checkinMoment = moment(checkinTimeForCheckout, 'hh:mm a'); // Use stored check-in time
+    const checkoutMoment = moment(checkTime, 'hh:mm a');
+    const overAll = moment.duration(checkoutMoment.diff(checkinMoment));
+
     // Update the state
     setTotal(`${overAll.hours()}hrs : ${overAll.minutes()}mins`);
-    setDisabledct(true);
-    // Send data to the backend
 
+    // Send data to the backend
     localStorage.setItem("checkoutTime", checkTime);
     localStorage.setItem("name", name);
     localStorage.setItem("empId", empId);
     localStorage.setItem('total', `${overAll.hours()}hrs : ${overAll.minutes()}mins`);
 
-    
     try {
       const response = await fetch('/attendance/att', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ checkOutTime: checkTime, name: name, empId: empId, total: `${overAll.hours()}hrs : ${overAll.minutes()}mins`, }),
+        body: JSON.stringify({
+          checkInTime: checkinTimeForCheckout, // Use stored check-in time
+          checkOutTime: checkTime,
+          name: name,
+          empId: empId,
+          total: `${overAll.hours()}hrs : ${overAll.minutes()}mins`,
+        }),
       });
-  
+
       if (response.ok) {
         console.log('Checkout time saved successfully');
       } else {
@@ -178,48 +130,84 @@ function Attendance() {
       console.error('Error:', error);
     }
   };
-  // const onCheck = (e) => {
-  //   e.preventDefault();
-  //   const time = new Date();
-  //   const checkoutTime = moment(time).add(570, "minutes").format("hh:mm a");
-  //   console.log(checkoutTime);
 
-  //   moment.defaultFormat = "hh:mm";
-  //   console.log(time);
-  //   const timeNow = moment(time).format("hh:mm a");
-  //   console.log(timeNow);
-  //   const a = moment("6:00 pm", "hh:mm a");
-  //   const b = moment(time, "hh:mm a");
-  //   const c = moment.duration(a.diff(b));
-  //   calc(checkoutTime);
-  //   // console.log(outTime)
-  //   setInterval(() => {
-  //     calc(checkoutTime);
-  //   }, 60000);
-  //   console.log(`${c.hours()}Hours &  Minutes ${c.minutes()}`);
-  //   console.log(moment("08:30", moment.defaultFormat).fromNow());
-  //   setTime(timeNow);
-  //   setDisabled(true);
-  //   // setOutTime(checkoutTime)
-  //   // setTimeout(()=>{ var d = c.hours()+'Hours &  Minutes '+c.minutes();
-  //   // console.log(c.hours()+'Hours &  Minutes '+c.minutes())
-  //   // setRemain(d)},1000)
-  //   // const check = {
-  //   //   timeNow,
-  //   // };
-  //   // props.checkIn(check);
-  // };
+  const resetStateAndButtons = () => {
+    setCheckinTime('');
+    setCheckoutTime('');
+    setTotal('');
+    setRemainingTime('');
+    localStorage.removeItem('checkinTime');
+    localStorage.removeItem('checkoutTime');
+    localStorage.removeItem('total');
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(resetStateAndButtons, 60000);
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, []);
+
+  useEffect(() => {
+    const totalResetIntervalId = setInterval(() => {
+      localStorage.removeItem('total');
+      setTotal('');
+    }, 60000);
+
+    return () => clearInterval(totalResetIntervalId); // Cleanup on component unmount
+  }, []);
+
+  useEffect(() => {
+    const storedCheckinTime = localStorage.getItem("checkinTime");
+    const storedCheckoutTime = localStorage.getItem("checkoutTime");
+    const storedTotal = localStorage.getItem('total');
+    const storedName = localStorage.getItem("name");
+    const storedEmpId = localStorage.getItem("empId");
+
+    if (storedName) {
+      dispatch(updateUserName(storedName));
+
+      if (storedEmpId) {
+        dispatch(updateUserEmpId(storedEmpId));
+      }
+
+      if (storedTotal) {
+        setTotal(storedTotal);
+      }
+    }
+
+    if (storedCheckinTime) {
+      setCheckinTime(storedCheckinTime);
+    }
+
+    if (storedCheckoutTime) {
+      setCheckoutTime(storedCheckoutTime);
+    }
+  }, [dispatch]);
+
+  const calculateRemainingTime = () => {
+    const timeNow = moment();
+    const checkinMoment = moment(checkinTime, 'hh:mm a');
+    const checkoutMoment = moment(checkoutTime, 'hh:mm a');
+
+    const remainingDuration = checkoutMoment.diff(timeNow);
+    const remaining = moment.duration(remainingDuration);
+
+    setRemainingTime(`${remaining.hours()}hrs : ${remaining.minutes()}mins`);
+  };
+
+  useEffect(() => {
+    const remainingIntervalId = setInterval(calculateRemainingTime, 60000);
+    return () => clearInterval(remainingIntervalId);
+  }, [checkinTime, checkoutTime]);
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <Grid item xs={12} mt={1} mb={40}>
-        {/* <MDBox py={6}> */}
-        <MDBox mt={4} mb={8}>
+      <Grid item xs={12} mt={1} >
+        <MDBox mt={4} mb={2}>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} lg={8}>
               <Card mb={3}>
                 <MDBox
-                  // mb={7}
                   display="flex"
                   flexDirection="column"
                   alignItems="center"
@@ -240,65 +228,81 @@ function Attendance() {
                         mb={3}
                         type="submit"
                         color="info"
-                        onClick={onCheck}
-                        disabled={isDisabled}
+                        onClick={handleCheckin}
+                        disabled={!!checkinTime}
                       >
                         Check In!
                       </MDButton>
                       <MDBox display="flex" flexDirection="column">
                         <MDTypography
                           mt={3}
-                          // mb={3}
                           variant="caption"
                           color="dark"
                           fontWeight="regular"
-                          flexDirection="column"
                         >
-                          <h3>Time:{ctime}</h3>
+                          <h3>Time: {checkinTime}</h3>
                         </MDTypography>
                       </MDBox>
                     </Grid>
                     <Grid mt={3} item xs={12} md={6} lg={4}>
-                      <MDButton type="submit" color="success" onClick={onCheckout} disabled={isDisabledct}>
+                      <MDButton
+                        type="submit"
+                        color="success"
+                        onClick={handleCheckout}
+                        disabled={!!checkoutTime}
+                      >
                         Check out!
                       </MDButton>
                       <MDBox display="flex" flexDirection="column">
                         <MDTypography
                           mt={3}
-                          // mb={3}
                           variant="caption"
                           color="dark"
                           fontWeight="regular"
-                          flexDirection="column"
                         >
-                          <h3>Time:{checkT}</h3>
+                          <h3>Time: {checkoutTime}</h3>
                         </MDTypography>
                       </MDBox>
                     </Grid>
                   </MDBox>
                 </MDBox>
-                {/* <Grid item xs={12} lg={8}> */}
                 <MDBox mt={4} px={10} display="flex" flexDirection="column">
                   <MDTypography mb={1} variant="caption" color="dark" fontWeight="regular">
                     <h3>Over All Time: {total}</h3>
                   </MDTypography>
-
-                  {/* <MDTypography mb={3} variant="caption" color="dark" fontWeight="regular">
-                    <h3>Remaning Time: {remain}</h3>
-                  </MDTypography> */}
                 </MDBox>
                 <MDBox mt={4} px={10} display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-                <MDTypography mb={3} variant="caption" color="error" fontWeight="regular">
+                  <MDTypography mb={3} variant="caption" color="error" fontWeight="regular">
                     <h1>🚧 Under Development Process 🚧</h1>
                   </MDTypography>
-                  </MDBox>
-                {/* </Grid> */}
+                </MDBox>
               </Card>
             </Grid>
           </Grid>
         </MDBox>
-        {/* </MDBox> */}
-      </Grid>z
+      </Grid>
+
+      <Grid>
+      <Card>
+        {/* Date Picker for filtering */}
+        {/* <DatePicker
+          selected={selectedDate}
+          onChange={(date) => setSelectedDate(date)}
+          dateFormat="yyyy-MM-dd"
+          isClearable
+          placeholderText="Select Date"
+        /> */}
+
+        {/* DataGrid for displaying attendance data */}
+        
+        <div style={{ height: 400, width: '100%' }}>
+         
+          <DataGrid rows={mappedData} columns={columns} pageSize={5} />
+        
+        </div>
+        </Card>
+      </Grid>
+
       <Footer />
     </DashboardLayout>
   );
