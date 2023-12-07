@@ -44,61 +44,44 @@ import DialogContent from "@mui/material/DialogContent";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import DialogActions from "@mui/material/DialogActions";
 import { useHistory } from "react-router-dom";
-
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import "layouts/Billing-Table/table.css";
-
-const columns = [
-  { id: "jmanagerTeam", label: "Manager", minWidth: 100 },
-  { id: "jstatus1", label: "Status", minWidth: 100 },
-  { id: "jcDate", label: "EndDate", minWidth: 100 },
-  { id: "action", label: "    Action", minWidth: 50 },
-];
-
-function createData(
-  date,
-  team,
-  projectname,
-  batch,
-  jmanagerTeam,
-  jstatus1,
-  jcDate
-) {
-  return {
-    date,
-    team,
-    batch,
-    projectname,
-    jmanagerTeam,
-    jstatus1,
-    jcDate,
-  }; 
-}
-
-const rowData = [];
-
-axios
-  .get("/billing/")
-  .then((res) => rowData[res.data])
-  .catch((err) => console.log(err));
-console.log(rowData);
-
-const rows = [
-  rowData.map((item, index) => {
-    createData(
-      item.reportDate,
-      item.team,
-      item.projectname,
-      item.batch,
-      item.jobs.managerTeam,
-      item.jobs.status1,
-      item.jobs.cDate
-    );
-  }),
-];
-
+ 
 export default function ColumnGroupingTable() {
   // drawer code
-
+  const columns = [
+    { field: "projectname", headerName: "Projectname", flex: 1 },
+    { field: "team", headerName: "Department", flex: 1 },
+    { field: "batch", headerName: "No.of.Members", flex: 1 },
+    { field: "reportDate", headerName: "StartDate", flex: 1 },
+    { field: "jobs.cDate", headerName: "EndDate", flex: 1 },
+    { field: "jobs.managerTeam", headerName: "Manager", flex: 1 },
+    { field: "jobs.status1", headerName: "Status", flex: 1 },
+ 
+    {
+      field: "action",
+      headerName: "Action",
+      sortable: false,
+      renderCell: (params) => (
+        <>
+          <Link to={`/project-entry/edit/${params.row._id}`}>
+            <IconButton aria-label="edit">
+              <EditIcon />
+            </IconButton>{" "}
+          </Link>
+          |
+          <IconButton
+            onClick={() => handleDelete(params.row._id)}
+            color="error"
+            aria-label="delete"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+ 
   const [count, setCount] = useState({ aTotal: "" });
   const [bill, setBill] = useState({
     tDate: "",
@@ -111,42 +94,42 @@ export default function ColumnGroupingTable() {
       cDate: "",
     },
   });
-
+ 
   const [drawerOpen, setDrawerOpen] = useState(false);
-
+ 
   const openDrawer = () => {
     setDrawerOpen(true);
   };
-
+ 
   const closeDrawer = () => {
     setDrawerOpen(false);
   };
-
+ 
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
-
+ 
   const openFilterDialog = () => {
     setFilterDialogOpen(true);
   };
-
+ 
   const closeFilterDialog = () => {
     setFilterDialogOpen(false);
   };
   const handleCancel = () => {
     setValues(initialValues);
     setTeamList(null);
-
+ 
     // Close the filter popup
     closeFilterDialog();
   };
-
+ 
   const empId = useSelector((state) => state.auth.user.empId);
   const name = useSelector((state) => state.auth.user.name);
-
+ 
   const [teamList, setTeamList] = useState(null);
-
+ 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
+ 
     setBill({
       ...bill,
       [name]: value,
@@ -155,9 +138,9 @@ export default function ColumnGroupingTable() {
       // status1: status,
     });
   };
-
+ 
   const handleTeamChange = (event, value) => setTeamList(value);
-
+ 
   const handleManagerTeamChange = (event, value) => {
     setBill({
       ...bill,
@@ -167,7 +150,7 @@ export default function ColumnGroupingTable() {
       },
     });
   };
-
+ 
   const handleStatusChange = (event) => {
     setBill({
       ...bill,
@@ -177,7 +160,7 @@ export default function ColumnGroupingTable() {
       },
     });
   };
-
+ 
   useEffect(() => {
     setCount({
       ...count,
@@ -207,65 +190,22 @@ export default function ColumnGroupingTable() {
     closeDrawer();
     // console.log(bill.tDate)
   };
-
+ 
   // drawer code end
-
+ 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [data, setData] = useState([]);
-  const [total, setTotal] = useState({
-    countTotal: 0,
-    hoursTotal: 0,
-    jobTotal: 0,
-  });
-
-  const headers = [
-    { label: "Date", key: "reportDate" },
-    { label: "Team", key: "team" },
-    { label: "Projectname", key: "projectname" },
-    { label: "Members", key: "batch" },
-    { label: "Total Jobs worked on | Manager", key: "jobs.managerTeam" },
-    { label: "Total Jobs worked on | Status", key: "jobs.status1" },
-    { label: "Total Jobs worked on | EndDate", key: "jobs.cDate" },
-  ];
-
+ 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
-  useEffect(() => {
-    var countTotal = 0;
-    let activeCount = 0;
-    let completedCount = 0;
-    let projectTotal = 0;
-
-    data.map((item) => {
-      projectTotal += item.projectname ? 1 : 0;
-      if (item.jobs.status1 === "Active") {
-        activeCount++;
-      } else if (item.jobs.status1 === "Completed") {
-        completedCount++;
-      }
-    });
-
-    setTotal({
-      ...total,
-      activeCount,
-      completedCount,
-      projectTotal,
-    });
-  }, [data]);
-
-  // React.useEffect(()=>{
-  //   axios.get("/billing/")
-  //   .then((res)=>setData(res.data))
-  //   .catch(err=>console.log(err))
-  // },[])
-
+ 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+ 
   const handleDelete = (id) => {
     axios
       .delete("/billing/" + id)
@@ -273,7 +213,7 @@ export default function ColumnGroupingTable() {
       .catch((err) => console.log(err));
     setData(data.filter((el) => el._id !== id));
   };
-
+ 
   // card
   const initialValues = {
     startDate: "",
@@ -281,13 +221,13 @@ export default function ColumnGroupingTable() {
     team: "",
   };
   const [values, setValues] = useState(initialValues);
-
+ 
   const [teamlist, setTeamlist] = useState(null);
   // const [report, setReport] = useState([]);
-
+ 
   const handleInputchange = (e) => {
     const { name, value } = e.target;
-
+ 
     setValues({
       ...values,
       [name]: value,
@@ -295,14 +235,14 @@ export default function ColumnGroupingTable() {
   };
   // const handleChange = (event, value) => setEmpName(value);
   const handleTeamchange = (event, value) => setTeamlist(value);
-
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+ 
     const sDate = values.startDate;
     const eDate = values.endDate;
     const team = teamlist;
-
+ 
     if (team == null) {
       axios
         .get("billing/fetch/date/?sDate=" + sDate + "&eDate=" + eDate)
@@ -332,8 +272,13 @@ export default function ColumnGroupingTable() {
       .get("/billing/")
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
+    // setData(data.filter((el) => el._id !== id));
   };
-
+  const formattedData = data.map((row) => ({
+    ...row,
+    id: row._id,
+    // Assuming _id is the unique identifier
+  }));
   // Team List
   const List = ["CV", "NLP", "CM", "Sourcing"];
   return (
@@ -385,7 +330,7 @@ export default function ColumnGroupingTable() {
             <CloseIcon />
           </IconButton>
         </MDBox>
-
+ 
         <MDBox pb={5} component="form" role="form" onSubmit={submit}>
           <MDBox
             sx={{
@@ -465,7 +410,7 @@ export default function ColumnGroupingTable() {
               <option value="Naveen">Naveen</option>
               <option value="Sowmiya">Sowmiya</option>
             </TextField>
-
+ 
             <TextField
               sx={{ width: 280, ml: 2 }}
               type="number"
@@ -611,7 +556,7 @@ export default function ColumnGroupingTable() {
                       onChange={handleInputchange}
                     />
                   </Grid>
-
+ 
                   {/* Row 2: Team and Name */}
                   <Grid item xs={6}>
                     <MDTypography variant="h6" fontWeight="medium">
@@ -626,7 +571,7 @@ export default function ColumnGroupingTable() {
                       renderInput={(params) => <TextField {...params} />}
                     />
                   </Grid>
-
+ 
                   {/* Row 3: Search Button */}
                   <Grid item xs={12}>
                     <Box
@@ -661,35 +606,74 @@ export default function ColumnGroupingTable() {
         </Card>
       </Grid>
       <Grid item xs={12} mt={1} mb={10}>
-        <Paper sx={{ width: "100%" }}>
-          <TableContainer sx={{ maxHeight: 740 }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left" colSpan={2}>
-                    <MDButton
-                      type="submit"
-                      color="info"
-                      variant="outlined"
-                      size="small"
-                      style={{ marginRight: "13px" }}
-                    >
-                      <CSVLink
-                        data={data}
-                        filename={"Billing.csv"}
-                        headers={headers}
-                      >
-                        <MDTypography variant="outlined" color="info">
-                          <SaveAltIcon /> Export
-                        </MDTypography>
-                      </CSVLink>
-                    </MDButton>
-                    <MDButton
-                      type="submit"
-                      onClick={openFilterDialog}
-                      color="info"
-                      variant="outlined"
-                      size="small"
+        <Card>
+          <Box sx={{ height: 700, width: "100%" }}>
+            <DataGrid
+              rows={formattedData}
+              columns={columns.map((column) => {
+                if (column.field === "reportDate") {
+                  return {
+                    ...column,
+                    renderCell: (params) => (
+                      <TableCell style={{ padding: 0 }}>
+                        {moment(params.row.reportDate).format("DD/MM/YYYY")}
+                      </TableCell>
+                    ),
+                  };
+                }
+ 
+                if (column.field === "jobs.managerTeam") {
+                  return {
+                    ...column,
+                    renderCell: (params) => (
+                      <TableCell style={{ padding: 0 }}>
+                        {params.row.jobs?.managerTeam}
+                      </TableCell>
+                    ),
+                  };
+                }
+ 
+                if (column.field === "jobs.status1") {
+                  return {
+                    ...column,
+                    renderCell: (params) => (
+                      <TableCell style={{ padding: 0 }}>
+                        {params.row.jobs?.status1}
+                      </TableCell>
+                    ),
+                  };
+                }
+                if (column.field === "jobs.cDate") {
+                  return {
+                    ...column,
+                    renderCell: (params) => (
+                      <TableCell style={{ padding: 0 }}>
+                        {moment(params.row.jobs?.cDate).format("DD/MM/YYYY")}
+                      </TableCell>
+                    ),
+                  };
+                }
+ 
+                // Otherwise, return the original column
+                return column;
+              })}
+              // other DataGrid props
+              // />
+              pageSize={10}
+              rowsPerPageOptions={[10,25,50,100]}
+              checkboxSelection
+              disableSelectionOnClick
+              components={{
+                Toolbar: () => (
+                  <div style={{ display: "flex" }}>
+                    <GridToolbar />
+ 
+                    <div
+                      style={{
+                        display: "flex",
+                        marginLeft: "auto",
+                        alignItems: "center",
+                      }}
                     >
                       <FilterListIcon
                         className="team-filter-icon"
@@ -713,109 +697,29 @@ export default function ColumnGroupingTable() {
                       >
                         TEAM FILTER
                       </MDTypography>
-                    </MDButton>
-                  </TableCell>
-                  <TableCell align="right" colSpan={2}>
-                    <MDButton
-                      className="team-report-btn"
-                      variant="outlined"
-                      color="error"
-                      size="small"
-                      onClick={allReport}
-                    >
-                      &nbsp;All Report
-                    </MDButton>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-            </Table>
-            <Table>
-              <TableHead sx={{ display: "table-header-group !important" }}>
-                <TableRow>
-                  <TableCell align="center" minwidth={150} rowSpan={2}>
-                    Date
-                  </TableCell>
-                  <TableCell align="center" rowSpan={2}>
-                    Team
-                  </TableCell>
-                  <TableCell align="center" rowSpan={2}>
-                    No.of.Members
-                  </TableCell>
-                  <TableCell align="center" rowSpan={2}>
-                    Projectname
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  {columns.map((column) => (
-                    <TableCell
-                      key={column.id}
-                      align={column.align}
-                      style={{ top: 57, minwidth: column.minwidth }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((item, index) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={index}
-                        align="center"
+                      <MDButton
+                        className="team-report-btn"
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                        style={{ marginRight: "13px" }}
+                        onClick={allReport}
+                        // onClick={() => setShow(!show)}
                       >
-                        <TableCell align="center">
-                          {moment(item.reportDate).format("DD/MM/YYYY")}
-                        </TableCell>
-                        <TableCell align="center">{item.team}</TableCell>
-                        <TableCell align="center">{item.batch}</TableCell>
-                        <TableCell align="center">{item.projectname}</TableCell>
-                        <TableCell>{item.jobs?.managerTeam}</TableCell>
-                        <TableCell>{item.jobs?.status1}</TableCell>
-                        <TableCell>
-                          {" "}
-                          {moment(item.jobs?.cDate).format("DD/MM/YYYY")}
-                        </TableCell>
-
-                        <TableCell>
-                          <Link to={"/project-entry/edit/" + item._id}>
-                            <IconButton aria-label="edit">
-                              <EditIcon />
-                            </IconButton>{" "}
-                          </Link>
-                          |
-                          <IconButton
-                            onClick={(e) => handleDelete(item._id)}
-                            color="error"
-                            aria-label="delete"
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 100]}
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
+                        &nbsp;All Report
+                      </MDButton>
+                    </div>
+                  </div>
+                ),
+              }}
+            />
+          </Box>
+        </Card>
       </Grid>
+ 
       <Footer />
       <ToastContainer />
     </DashboardLayout>
   );
 }
+ 
