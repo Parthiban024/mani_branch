@@ -71,7 +71,7 @@ function createData(
     jmanagerTeam,
     jstatus1,
     jcDate,
-  };
+  }; 
 }
 
 const rowData = [];

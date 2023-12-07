@@ -466,7 +466,7 @@ function Report() {
             minWidth: "120px", // Adjust the width as needed
           }}
         >
-          Add Project
+          Add Task
         </MDButton>
       </div>
       <Drawer anchor="right" PaperProps={{ style: { width: 712 } }} open={drawerOpen} onClose={closeDrawer}>

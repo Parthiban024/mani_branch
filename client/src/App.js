@@ -114,7 +114,7 @@ function App() {
           <Route exact path="/attendance" element={<Attendance/>} />
         </Route>
         <Route element={<Protected isValid={(isLoggedIn&&role==='analyst')}/>}>
-          <Route exact path="/user-report" element={<UserReport/>} />
+          <Route exact path="/user-task" element={<UserReport/>} />
         </Route> <Route element={<Protected isValid={(isLoggedIn&&role==='admin')}/>}>
           <Route exact path="/project-entry" element={<BillingReport />} />
           <Route exact path="/project-entry/edit/:id" element={<Edit/>} />

@@ -29,10 +29,10 @@ const routes = [
 
   {
     type: "collapse",
-    name: "UserReport",
-    key: "user-report",
+    name: "UserTask",
+    key: "user-task",
     icon: <Icon fontSize="small">leaderboard</Icon>,
-    route: "/user-report",
+    route: "/user-task",
     component: <UserReport />,
     role: "analyst",
   },
