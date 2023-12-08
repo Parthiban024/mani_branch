@@ -36,6 +36,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import 'layouts/Billing-Table/table.css'
+import dayjs, { Dayjs } from 'dayjs';
+import Stack from '@mui/material/Stack';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 function Report() {
 
 
@@ -75,6 +80,15 @@ function Report() {
     }));
   };
 
+  // const handleInputchange = (e) => {
+  //   if (e.target) {
+  //     const { name, value: inputValue } = e.target;
+  //     setValue((prevValue) => ({
+  //       ...prevValue,
+  //       [name]: inputValue,
+  //     }));
+  //   }
+  // };
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Function to handle opening the drawer
@@ -242,6 +256,7 @@ function Report() {
       .catch((err) => toast.error(`Try Again Followed Error Acquired: ${err}☹️`));
 
     // console.log(userData);
+    closeDrawer()
   };
 
   // useEffect(() => {
@@ -622,7 +637,20 @@ function Report() {
               <option value="4hour">4 Hour</option>
             </TextField>
 
-
+            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Stack spacing={2} sx={{ width: 305, mt: 1}}>
+        <TimePicker
+        id="hour"
+         name="sessionOne"
+         value={value.sessionOne}
+         onChange={handleInputchange}
+          referenceDate={dayjs('2022-04-17')}
+        />
+        <Typography>
+          Stored value: {values == null ? 'null' : values.format()}
+        </Typography>
+      </Stack>
+    </LocalizationProvider> */}
           </MDBox>
           <MDBox
             pt={3}
@@ -775,7 +803,7 @@ function Report() {
                               onClick={openFilterDialog}
                               aria-label="Team Filter"
                             />
-                            <MDTypography variant="h6" onClick={openDrawer} style={{ color: '#3a87ea', cursor: 'pointer', fontSize: '12.1px', marginRight: '10px', }}>
+                            <MDTypography variant="h6" onClick={openFilterDialog} style={{ color: '#3a87ea', cursor: 'pointer', fontSize: '12.1px', marginRight: '10px', }}>
                               TEAM FILTER
                             </MDTypography>
 

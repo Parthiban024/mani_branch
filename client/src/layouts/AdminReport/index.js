@@ -429,7 +429,7 @@ function AdminReport() {
                   showTotalEntries={false}
                   noEndBorder
                 /> */}
-                <Box sx={{ height: 700, width: "100%" }}>
+                <Box sx={{ height: 480, width: "100%" }}>
                   <DataGrid
                     rows={row}
                     columns={columns}

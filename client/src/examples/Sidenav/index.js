@@ -48,7 +48,8 @@ function Sidenav({ color, brand, brandName, routes,roles, ...rest }) {
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
   const quotes = () =>{
-    axios.get('https://api.quotable.io/random')
+    // axios.get('https://api.quotable.io/random')
+    axios.get('')
     .then((res)=>{
       setQuote(res.data)
       
@@ -182,9 +183,9 @@ function Sidenav({ color, brand, brandName, routes,roles, ...rest }) {
       />
        <MDBox mt={2} textAlign="center">
           <MDBox mb={0.5}>
-            <MDTypography color="success" variant="h4">
+            {/* <MDTypography color="success" variant="h4">
               Quotes 
-            </MDTypography>
+            </MDTypography> */}
           </MDBox></MDBox>
           <MDBox mt={1} display="flex" flexDirection="column" textAlign="center">
          <MDTypography sx={{whiteSpace: "pre-wrap"}} mt={1} mb={2} variant="h6"  color="text">
@@ -192,9 +193,9 @@ function Sidenav({ color, brand, brandName, routes,roles, ...rest }) {
          <br/>
            {/* - {quote.author} */}
           </MDTypography>
-          <MDTypography color="dark" variant="h5">
+          {/* <MDTypography color="dark" variant="h5">
           - {quote.author}
-            </MDTypography>
+            </MDTypography> */}
         </MDBox>
       {/* <MDBox p={2} mt="auto">
         <MDButton

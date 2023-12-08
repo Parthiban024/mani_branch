@@ -607,7 +607,7 @@ export default function ColumnGroupingTable() {
       </Grid>
       <Grid item xs={12} mt={1} mb={10}>
         <Card>
-          <Box sx={{ height: 700, width: "100%" }}>
+          <Box sx={{ height: 480, width: "100%" }}>
             <DataGrid
               rows={formattedData}
               columns={columns.map((column) => {

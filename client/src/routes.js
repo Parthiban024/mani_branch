@@ -8,7 +8,7 @@ import UserReport from "layouts/UserReport";
 import AdminReport from "layouts/AdminReport";
 import BillingReport from "layouts/Billing-report";
 import BillingTable from "layouts/Billing-Table";
-// import Employee from "./layouts/employeeReport";
+ import EmployeeAtt from "./layouts/Emp-Attendance";
 // import CreateTeam from "layouts/create-team";
 // import Edit from 'layouts/Billing-report/Edit'
 import Attendance from "layouts/Attendance";
@@ -19,10 +19,10 @@ import Icon from "@mui/material/Icon";
 const routes = [
   {
     type: "collapse",
-    name: "Task",
-    key: "task",
+    name: "CheckIn/out",
+    key: "checkIn-Out",
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/task",
+    route: "/checkIn-Out",
     component: <Dashboard />,
     role: "open",
   },
@@ -45,15 +45,15 @@ const routes = [
     component: <AdminReport />,
     role: "admin",
   },
-  {
-    type: "collapse",
-    name: "Attendance",
-    key: "attendance",
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: "/attendance",
-    component: <Attendance />,
-    role: "analyst",
-  },
+  // {
+  //   type: "collapse",
+  //   name: "Attendance",
+  //   key: "attendance",
+  //   icon: <Icon fontSize="small">table_view</Icon>,
+  //   route: "/attendance",
+  //   component: <Attendance />,
+  //   role: "analyst",
+  // },
   {
     type: "collapse",
     name: "Employee",
@@ -63,15 +63,15 @@ const routes = [
     component: <Employee />,
     role: "admin",
   },
-  // {
-  //   type: "collapse",
-  //   name: "Project Entry",
-  //   key: "project-entry",
-  //   icon: <Icon fontSize="small">create_new_folder</Icon>,
-  //   route: "/project-entry",
-  //   component: <BillingReport />,
-  //   role: "admin",
-  // },
+  {
+    type: "collapse",
+    name: "Employee Attendance",
+    key: "employee-attendance",
+    icon: <Icon fontSize="small">create_new_folder</Icon>,
+    route: "/employee-attendance",
+    component: <EmployeeAtt/>,
+    role: "admin",
+  },
   // {
   //   type: "collapse",
   //   name: "BillingReport",

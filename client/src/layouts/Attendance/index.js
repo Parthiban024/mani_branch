@@ -3,6 +3,8 @@ import Card from "@mui/material/Card";
 import MDButton from "components/MDButton/index";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
+import CheckIcon from "@mui/icons-material/Check";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -46,7 +48,12 @@ function Attendance() {
     { field: 'checkInTime', headerName: 'Check In', width: 150,  flex: 1,  },
     { field: 'checkOutTime', headerName: 'Check Out', width: 150,  flex: 1,  },
     { field: 'total', headerName: 'Total', width: 150,  flex: 1,  },
-    { field: 'currentDate', headerName: 'Date', width: 150, flex: 1,  },
+    {
+      field: 'currentDate',
+      headerName: 'Date',
+      width: 150,
+      valueGetter: (params) => moment(params.row.currentDate).format('YYYY-MM-DD'),
+    },
   ];
 
   const mappedData = attendanceData.map((item, index) => ({
@@ -295,7 +302,7 @@ function Attendance() {
 
         {/* DataGrid for displaying attendance data */}
         
-        <div style={{ height: 400, width: '100%' }}>
+        <div style={{ height: 370, width: '100%' }}>
          
           <DataGrid rows={mappedData} columns={columns} pageSize={5} />
         
